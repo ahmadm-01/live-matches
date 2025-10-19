@@ -6,7 +6,7 @@ async function loadScores() {
     const res = await fetch(apiURL, {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': 'YOUR_API_KEY',            // replace with your key
+        'X-RapidAPI-Key': '2aff68b382c14cd4a5b7b05d97773183',            // replace with your key
         'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
       }
     });
