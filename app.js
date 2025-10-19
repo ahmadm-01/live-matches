@@ -1,35 +1,31 @@
-// app.js
-const apiURL = 'https://api-football-v1.p.rapidapi.com/v3/fixtures?live=all&season=2025';
+// app.js for football-data.org
+
+const apiURL = 'https://api.football-data.org/v4/matches?status=LIVE';
 
 async function loadScores() {
   try {
     const res = await fetch(apiURL, {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Key': '2aff68b382c14cd4a5b7b05d97773183',            // replace with your key
-        'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
-      }
+      headers: { 'X-Auth-Token': '2aff68b382c14cd4a5b7b05d97773183' }
     });
-    const { response } = await res.json();
+    const data = await res.json();
+    const matches = data && data.matches ? data.matches : [];
     const container = document.getElementById('matches');
-
-    if (!response.length) {
+    if (!matches.length) {
       container.innerHTML = '<p>No live soccer matches right now.</p>';
       return;
     }
-
-    container.innerHTML = response.map(m => `
+    container.innerHTML = matches.map(m => `
       <div class="match">
-        <span>${m.fixture.status.elapsed}'</span>
-        <span>${m.teams.home.name} vs ${m.teams.away.name}</span>
-        <span>${m.goals.home}–${m.goals.away}</span>
+        <span>${m.minute !== undefined ? m.minute : '-' }'</span>
+        <span>${m.homeTeam.name} vs ${m.awayTeam.name}</span>
+        <span>${m.score.fullTime.home !== null ? m.score.fullTime.home : 0}-${m.score.fullTime.away !== null ? m.score.fullTime.away : 0}</span>
       </div>
     `).join('');
-  } catch (err) {
-    console.error(err);
+  } catch (e) {
     document.getElementById('matches').innerHTML = '<p>Error loading scores.</p>';
   }
 }
 
 loadScores();
 setInterval(loadScores, 30000);
+
